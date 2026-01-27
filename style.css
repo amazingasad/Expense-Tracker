@@ -1,0 +1,240 @@
+:root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --accent: #10b981;
+    --bg: #0f172a;
+    --glass: rgba(255, 255, 255, 0.95);
+    --text-main: #1e293b;
+    --danger: #ef4444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+    background: var(--bg);
+    background-image: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 50%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+/* Container Responsiveness */
+.app-card {
+    background: var(--glass);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+    max-width: 500px;
+    /* PC Width */
+    border-radius: 28px;
+    padding: 30px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+@media (max-width: 480px) {
+    .app-card {
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+}
+
+/* Animations */
+.screen {
+    display: none;
+    animation: fadeInUp 0.4s ease-out forwards;
+}
+
+.active {
+    display: block;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* UI Elements */
+h1 {
+    font-weight: 800;
+    font-size: 28px;
+    color: var(--bg);
+    margin-bottom: 8px;
+    letter-spacing: -1px;
+}
+
+p {
+    color: #64748b;
+    margin-bottom: 20px;
+    font-size: 15px;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: 0.3s;
+    outline: none;
+}
+
+input:focus {
+    border-color: var(--primary);
+    background: white;
+}
+
+button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    margin-top: 10px;
+}
+
+.btn-sm {
+    width: auto;
+    padding: 8px 15px;
+    font-size: 13px;
+}
+
+.btn-reset {
+    background: transparent;
+    color: var(--danger);
+    border: none;
+    margin-top: 20px;
+    font-size: 14px;
+    text-decoration: underline;
+}
+
+/* Dashboard Specifics */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.stat-box {
+    background: white;
+    padding: 15px;
+    border-radius: 16px;
+    border: 1px solid #f1f5f9;
+}
+
+.stat-box small {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: #94a3b8;
+    font-weight: 800;
+}
+
+.stat-box div {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.add-expense-card {
+    background: rgba(99, 102, 241, 0.05);
+    padding: 15px;
+    border-radius: 18px;
+    margin-bottom: 20px;
+}
+
+.scroll-area {
+    max-height: 250px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.scroll-area::-webkit-scrollbar {
+    width: 4px;
+}
+
+.scroll-area::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.expense-item {
+    background: white;
+    padding: 14px;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    border-left: 4px solid var(--primary);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+.delete-btn {
+    background: #fee2e2;
+    color: var(--danger);
+    padding: 4px 8px;
+    font-size: 11px;
+    width: auto;
+    border-radius: 6px;
+    margin-top: 5px;
+}
+
+.settlement-card {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 14px;
+    margin-top: 15px;
+    border: 1px dashed var(--primary);
+    font-size: 14px;
+    line-height: 1.6;
+}
