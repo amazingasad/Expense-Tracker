@@ -68,8 +68,8 @@ function render() {
     const total = expenses.reduce((s, e) => s + e.amount, 0);
     const avg = participants.length ? (total / participants.length) : 0;
 
-    document.getElementById('statTotal').innerText = `$${total.toFixed(2)}`;
-    document.getElementById('statAvg').innerText = `$${avg.toFixed(2)}`;
+    document.getElementById('statTotal').innerText = `৳${total.toFixed(2)}`;
+    document.getElementById('statAvg').innerText = `৳${avg.toFixed(2)}`;
 
     log.innerHTML = expenses.map(e => `
         <div class="expense-item">
@@ -78,7 +78,7 @@ function render() {
                 <div style="font-size:12px; color:#64748b">${e.name} • ${e.time}</div>
             </div>
             <div style="text-align:right">
-                <div style="font-weight:800; color:var(--primary)">$${e.amount.toFixed(2)}</div>
+                <div style="font-weight:800; color:var(--primary)">৳${e.amount.toFixed(2)}</div>
                 <button class="delete-btn" onclick="deleteExpense(${e.id})">Remove</button>
             </div>
         </div>
@@ -109,7 +109,7 @@ function toggleSettlements() {
 
     while(d < debtors.length && c < creditors.length) {
         let pay = Math.min(-debtors[d].bal, creditors[c].bal);
-        results.push(`<b>${debtors[d].name}</b> pays $${pay.toFixed(2)} to <b>${creditors[c].name}</b>`);
+        results.push(`<b>${debtors[d].name}</b> pays ${pay.toFixed(2)} TK to <b>${creditors[c].name}</b>`);
         debtors[d].bal += pay;
         creditors[c].bal -= pay;
         if(Math.abs(debtors[d].bal) < 0.01) d++;
@@ -141,7 +141,7 @@ async function exportPDF() {
     doc.setFontSize(18);
     doc.text("TourSplit Pro - Financial Report", 14, 20);
     
-    const tableData = expenses.map(e => [e.time, e.name, e.desc, `$${e.amount.toFixed(2)}`]);
+    const tableData = expenses.map(e => [e.time, e.name, e.desc, `TK ${e.amount.toFixed(2)}`]);
     doc.autoTable({
         startY: 30,
         head: [['Time', 'Paid By', 'Description', 'Amount']],
