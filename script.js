@@ -9,6 +9,7 @@ function switchScreen(id) {
 
 // Initialization
 function initNames() {
+    switchScreen('step2');
     const count = document.getElementById('personCount').value;
     if (count < 2) return alert("Please enter at least 2 travelers.");
     
@@ -17,21 +18,40 @@ function initNames() {
     for(let i=1; i<=count; i++) {
         container.innerHTML += `<input type="text" class="name-in" placeholder="Traveler ${i} Name">`;
     }
-    switchScreen('step2');
 }
-
+//  Create Dashboad 
 function startDashboard() {
-    const inputs = document.querySelectorAll('.name-in');
-    participants = Array.from(inputs).map((inp, i) => inp.value.trim() || `Member ${i+1}`);
-    
-    updatePayerDropdown();
     switchScreen('step3');
+
+    const inputs = document.querySelectorAll('.name-in');
+
+    for (let i = 0; i < inputs.length; i++) {
+        let currentInput = inputs[i];
+        
+        let name = currentInput.value.trim();
+        
+        if (name === "") {
+            name = "Member " + (i + 1);
+        }
+        
+        participants.push(name);
+    }
+
+    updatePayerDropdown();
     saveData();
 }
 
 function updatePayerDropdown() {
     const select = document.getElementById('payerSelect');
-    select.innerHTML = participants.map(p => `<option value="${p}">${p}</option>`).join('');
+    select.innerHTML = "";
+
+    for (let i = 0; i < participants.length; i++) {
+        let person = participants[i];
+        let option = document.createElement("option");
+        option.value = person;
+        option.innerText = person;
+        select.appendChild(option);
+    }
 }
 
 // Expense Management
