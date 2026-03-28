@@ -1,13 +1,16 @@
 let participants = [];
 let expenses = [];
 
-// Screen Navigation
+// Screen switch
 function switchScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+    const screens = document.querySelectorAll('.screen');
+    for (let i = 0; i < screens.length; i++) {
+        screens[i].classList.remove('active');
+    }
     document.getElementById(id).classList.add('active');
 }
-
-// Initialization
+// Initialization name
 function initNames() {
     switchScreen('step2');
     const count = document.getElementById('personCount').value;
@@ -85,58 +88,114 @@ function deleteExpense(id) {
 
 function render() {
     const log = document.getElementById('expenseLog');
-    const total = expenses.reduce((s, e) => s + e.amount, 0);
-    const avg = participants.length ? (total / participants.length) : 0;
+    let total = 0;
+    for (let i = 0; i < expenses.length; i++) {
+        total = total + expenses[i].amount; 
+    }
+    let avg;
+    if (participants.length > 0) {
+        avg = total / participants.length;
+    } else {
+        avg = 0;
+    }
 
     document.getElementById('statTotal').innerText = `৳${total.toFixed(2)}`;
     document.getElementById('statAvg').innerText = `৳${avg.toFixed(2)}`;
 
-    log.innerHTML = expenses.map(e => `
-        <div class="expense-item">
-            <div>
-                <div style="font-weight:700; color:#1e293b">${e.desc}</div>
-                <div style="font-size:12px; color:#64748b">${e.name} • ${e.time}</div>
+    
+    let logContent = ""; 
+
+    
+    for (let i = expenses.length - 1; i >= 0; i--) {
+        let e = expenses[i]; 
+        
+        
+        logContent += `
+            <div class="expense-item">
+                <div>
+                    <div style="font-weight:700; color:#1e293b">${e.desc}</div>
+                    <div style="font-size:12px; color:#64748b">${e.name} • ${e.time}</div>
+                </div>
+                <div style="text-align:right">
+                    <div style="font-weight:800; color:var(--primary)">৳${e.amount.toFixed(2)}</div>
+                    <button class="delete-btn" onclick="deleteExpense(${e.id})">Remove</button>
+                </div>
             </div>
-            <div style="text-align:right">
-                <div style="font-weight:800; color:var(--primary)">৳${e.amount.toFixed(2)}</div>
-                <button class="delete-btn" onclick="deleteExpense(${e.id})">Remove</button>
-            </div>
-        </div>
-    `).reverse().join('');
+        `;
+    }
+
+    
+    log.innerHTML = logContent;
+
+
+
+
 }
 
 // Logic for Splitting
+
+
 function toggleSettlements() {
     const section = document.getElementById('settlementSection');
-    if(section.style.display === 'block') {
+
+    if (section.style.display === 'block') {
         section.style.display = 'none';
         return;
     }
 
     const totals = {};
-    participants.forEach(p => totals[p] = 0);
-    expenses.forEach(e => totals[e.name] += e.amount);
-    
-    const totalSpent = Object.values(totals).reduce((a,b) => a+b, 0);
-    const avg = totalSpent / participants.length;
-
-    let balances = participants.map(p => ({ name: p, bal: totals[p] - avg }));
-    let debtors = balances.filter(b => b.bal < -0.01).sort((a,b) => a.bal - b.bal);
-    let creditors = balances.filter(b => b.bal > 0.01).sort((a,b) => b.bal - a.bal);
-    
-    let results = [];
-    let d=0, c=0;
-
-    while(d < debtors.length && c < creditors.length) {
-        let pay = Math.min(-debtors[d].bal, creditors[c].bal);
-        results.push(`<b>${debtors[d].name}</b> pays ${pay.toFixed(2)} TK to <b>${creditors[c].name}</b>`);
-        debtors[d].bal += pay;
-        creditors[c].bal -= pay;
-        if(Math.abs(debtors[d].bal) < 0.01) d++;
-        if(Math.abs(creditors[c].bal) < 0.01) c++;
+    for (let i = 0; i < participants.length; i++) {
+        totals[participants[i]] = 0; 
+    }
+    for (let i = 0; i < expenses.length; i++) {
+        const e = expenses[i];
+        totals[e.name] += e.amount; 
     }
 
-    section.innerHTML = `<strong>Settlement Plan:</strong><br>${results.join('<br>') || 'Everyone is even!'}`;
+    
+    let totalSpent = 0;
+    for (let person in totals) {
+        totalSpent += totals[person]; 
+    }
+    const avg = totalSpent / participants.length; 
+
+
+    let debtors = [];
+    let creditors = [];
+    for (let i = 0; i < participants.length; i++) {
+        const p = participants[i];
+        const bal = totals[p] - avg; 
+        if (bal < -0.01) {
+            debtors.push({ name: p, bal: bal }); 
+        } else if (bal > 0.01) {
+            creditors.push({ name: p, bal: bal }); 
+        }
+    }
+
+    
+    let resultsText = "<strong>Settlement Plan:</strong><br>";
+    let d = 0;
+    let c = 0;
+
+    while (d < debtors.length && c < creditors.length) {
+        
+        let pay = Math.min(-debtors[d].bal, creditors[c].bal);
+        
+        
+        resultsText += `<b>${debtors[d].name}</b> pays ${pay.toFixed(2)} TK to <b>${creditors[c].name}</b><br>`;
+
+        
+        debtors[d].bal += pay;
+        creditors[c].bal -= pay;
+
+        
+        if (Math.abs(debtors[d].bal) < 0.01) d++;
+        if (Math.abs(creditors[c].bal) < 0.01) c++;
+    }
+
+    
+    if (totalSpent === 0) resultsText += "Everyone is even!";
+    section.innerHTML = resultsText;
     section.style.display = 'block';
 }
 

@@ -163,5 +163,3 @@ This project is open source and available under the [MIT License](LICENSE).
 If you have any questions or need help, please open an issue in the GitHub repository.
 
 ---
-
-Made with ❤️ for travelers everywhere
