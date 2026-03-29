@@ -1,61 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TourSplit Pro | Premium Expense Tracker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap"
+        rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="app-card">
-    <div id="step1" class="screen active">
-        <h1>Welcome to TourSplit</h1>
-        <p>Planning a trip? Let's manage the money.</p>
-        <div class="input-group">
-            <label>Number of Travelers</label>
-            <input type="number" id="personCount" placeholder="e.g. 3" min="2">
-        </div>
-        <button class="btn-primary" onclick="initNames()">Continue</button>
-    </div>
-
-    <div id="step2" class="screen">
-        <h1>Travelers</h1>
-        <p>Who is joining the tour?</p>
-        <div id="nameFields" class="scroll-area"></div>
-        <button class="btn-primary" onclick="startDashboard()">Create Dashboard</button>
-    </div>
-
-    <div id="step3" class="screen">
-        <header class="dashboard-header">
-            <h1>Dashboard</h1>
-            <button onclick="exportPDF()" class="btn-ghost btn-sm">📥 PDF</button>
-        </header>
-
-        <div class="stats-row">
-            <div class="stat-box"><small>Total Spent</small><div id="statTotal">৳0</div></div>
-            <div class="stat-box"><small>Avg / Person</small><div id="statAvg">৳0</div></div>
+    <div class="app-card">
+        <div id="step1" class="screen active">
+            <h1>Welcome to TourSplit</h1>
+            <p>Planning a trip? Let's manage the money.</p>
+            <div class="input-group">
+                <label>Number of Travelers</label>
+                <input type="number" id="personCount" placeholder="e.g. 3" min="2">
+            </div>
+            <button class="btn-primary" onclick="initNames()">Continue</button>
         </div>
 
-        <div class="add-expense-card">
-            <select id="payerSelect"></select>
-            <input type="text" id="descInput" placeholder="What was it for? (e.g. Pizza)">
-            <input type="number" id="amountInput" placeholder="Amount">
-            <button class="btn-primary" onclick="addExpense()">Add Expense</button>
+        <div id="step2" class="screen">
+            <h1>Travelers</h1>
+            <p>Who is joining the tour?</p>
+            <div id="nameFields" class="scroll-area"></div>
+            <button class="btn-primary" onclick="startDashboard()">Create Dashboard</button>
         </div>
 
-        <div id="expenseLog" class="scroll-area log-container"></div>
+        <div id="step3" class="screen">
+            <header class="dashboard-header">
+                <h1>Dashboard</h1>
+                <button onclick="exportPDF()" class="btn-ghost btn-sm">📥 PDF</button>
+            </header>
 
-        <button class="btn-ghost" onclick="toggleSettlements()">Calculate Final Split</button>
-        <div id="settlementSection" class="settlement-card" style="display:none;"></div>
-        
-        <button class="btn-reset" onclick="resetApp()">Reset Tour</button>
+            <div class="stats-row">
+                <div class="stat-box"><small>Total Spent</small>
+                    <div id="statTotal">৳0</div>
+                </div>
+                <div class="stat-box"><small>Avg / Person</small>
+                    <div id="statAvg">৳0</div>
+                </div>
+            </div>
+
+            <div class="add-expense-card">
+                <select id="payerSelect"></select>
+                <input type="text" id="descInput" placeholder="What was it for? (e.g. Pizza)">
+                <input type="number" id="amountInput" placeholder="Amount">
+                <button class="btn-primary" onclick="addExpense()">Add Expense</button>
+            </div>
+
+            <div id="expenseLog" class="scroll-area log-container"></div>
+
+            <button class="btn-ghost" onclick="toggleSettlements()">Calculate Final Split</button>
+            <div id="settlementSection" class="settlement-card" style="display:none;"></div>
+
+            <button class="btn-reset" onclick="resetApp()">Reset Tour</button>
+        </div>
     </div>
-</div>
 
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>
