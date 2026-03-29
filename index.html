@@ -15,58 +15,96 @@
 <body>
 
     <div class="app-card">
+        <button class="back-btn" id="backBtn" onclick="goBack()">← Back</button>
         <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
 
-        <div id="step1" class="screen active">
-            <h1>Welcome to TourSplit</h1>
-            <p>Planning a trip? Let's manage the money.</p>
-            <div style="margin-bottom: 15px;">
-                <label style="font-weight: 600; font-size: 14px; display: block; margin-bottom: 8px;">Number of
-                    Travelers</label>
-                <input type="number" id="personCount" placeholder="e.g. 3" min="2">
+        <div id="step0" class="screen active">
+            <div class="logo-splash">
+                <div class="logo-icon">TS</div>
+                <h1 style="text-align: center;">TourSplit Pro</h1>
+                <p>Version 1.0</p>
             </div>
+        </div>
+
+        <div id="step_welcome" class="screen">
+            <h1>Welcome!</h1>
+            <p>Track group expenses and settle debts instantly.</p>
+            <div class="privacy-box">
+                <h4 style="font-size: 13px; margin-bottom: 5px;">🔒 Privacy Concern</h4>
+                <p style="font-size: 12px; margin-bottom: 0;">Your tour data stays on your device. No cloud uploads.</p>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 600; font-size: 14px; display: block; margin-bottom: 8px;">Trip Destination</label>
+                <input type="text" id="destInput" placeholder="e.g. Sajek Valley">
+            </div>
+            <button class="btn-primary" onclick="switchScreen('step1')">Get Started</button>
+        </div>
+
+        <div id="step1" class="screen">
+            <h1>Setup Group</h1>
+            <p>How many people are traveling?</p>
+            <input type="number" id="personCount" placeholder="e.g. 3" min="2">
             <button class="btn-primary" onclick="initNames()">Continue</button>
         </div>
 
         <div id="step2" class="screen">
             <h1>Travelers</h1>
             <p>Who is joining the tour?</p>
-            <div id="nameFields" class="scroll-area" style="margin-bottom: 20px;"></div>
+            <div id="nameFields" style="max-height: 300px; overflow-y: auto; margin-bottom: 20px;"></div>
             <button class="btn-primary" onclick="startDashboard()">Create Dashboard</button>
         </div>
 
         <div id="step3" class="screen">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h1>Dashboard</h1>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                <div>
+                    <h1 id="dashDest">Dashboard</h1>
+                    <p id="dashSub" style="margin-bottom:0;">Expense Summary</p>
+                </div>
                 <button class="btn-ghost" onclick="exportPDF()">📥 PDF</button>
             </div>
 
             <div class="stats-row">
-                <div class="stat-box"><small>Total Spent</small>
-                    <div id="statTotal">৳0</div>
+                <div class="stat-box"><small>Total Spent</small><div id="statTotal">৳0</div></div>
+                <div class="stat-box"><small>Avg / Person</small><div id="statAvg">৳0</div></div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-bar">
+                    <div id="barFood" class="bar-segment seg-food" style="width: 0%"></div>
+                    <div id="barTrans" class="bar-segment seg-trans" style="width: 0%"></div>
+                    <div id="barHotel" class="bar-segment seg-hotel" style="width: 0%"></div>
+                    <div id="barOther" class="bar-segment seg-other" style="width: 0%"></div>
                 </div>
-                <div class="stat-box"><small>Avg / Person</small>
-                    <div id="statAvg">৳0</div>
+                <div class="chart-legend">
+                    <div class="legend-item"><span class="dot seg-food"></span> Food (<span id="txtFood">0</span>%)</div>
+                    <div class="legend-item"><span class="dot seg-trans"></span> Transport (<span id="txtTrans">0</span>%)</div>
+                    <div class="legend-item"><span class="dot seg-hotel"></span> Hotel (<span id="txtHotel">0</span>%)</div>
+                    <div class="legend-item"><span class="dot seg-other"></span> Other (<span id="txtOther">0</span>%)</div>
                 </div>
             </div>
 
-            <div class="add-expense-card">
+            <div class="add-expense-card" id="inputCard">
                 <select id="payerSelect"></select>
-                <input type="text" id="descInput" placeholder="What was it for? (e.g. Pizza)">
+                <select id="categorySelect">
+                    <option value="Food">🍔 Food</option>
+                    <option value="Transport">🚗 Transport</option>
+                    <option value="Hotel">🏨 Hotel</option>
+                    <option value="Other">✨ Other</option>
+                </select>
+                <input type="text" id="descInput" placeholder="Description (e.g. Dinner)">
                 <input type="number" id="amountInput" placeholder="Amount">
-                <button class="btn-primary" onclick="addExpense()">Add Expense</button>
+                <input type="hidden" id="editId" value="">
+                <button class="btn-primary" id="addBtn" onclick="addExpense()">Add Expense</button>
+                <button class="btn-ghost" id="cancelEditBtn" style="display:none; width:100%; margin-top:10px;" onclick="cancelEdit()">Cancel Edit</button>
             </div>
 
             <h3 style="font-weight: 800;">History</h3>
-            <div id="expenseLog" class="scroll-area log-container"></div>
+            <div id="expenseLog" style="max-height: 320px; overflow-y: auto; margin-top: 10px;"></div>
 
-            <button class="btn-ghost" style="width:100%; margin-top: 20px;" onclick="toggleSettlements()">Calculate
-                Final Split</button>
+            <button class="btn-ghost" style="width:100%; margin-top: 20px;" onclick="toggleSettlements()">Calculate Final Split</button>
             <div id="settlementSection" class="settlement-card" style="display:none;"></div>
 
-            <button
-                style="width:100%; background:none; border:none; color:#ff3b30; margin-top:30px; font-weight:600; text-decoration:underline; cursor:pointer;"
-                onclick="resetApp()">Reset Tour</button>
+            <button style="width:100%; background:none; border:none; color:#ff3b30; margin-top:30px; font-weight:600; text-decoration:underline; cursor:pointer;" onclick="resetApp()">Reset All Data</button>
         </div>
     </div>
 
