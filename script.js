@@ -81,7 +81,19 @@ function addExpense() {
 }
 
 function deleteExpense(id) {
-    expenses = expenses.filter(e => e.id !== id);
+    let newList = [];
+
+    for (let i = 0; i < expenses.length; i++) {
+        
+        if (expenses[i].id !== id) {
+            
+            newList.push(expenses[i]);
+        }
+        
+    }
+
+    expenses = newList;
+
     render();
     saveData();
 }
