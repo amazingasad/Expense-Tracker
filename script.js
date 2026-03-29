@@ -15,10 +15,10 @@ function initNames() {
     switchScreen('step2');
     const count = document.getElementById('personCount').value;
     if (count < 2) return alert("Please enter at least 2 travelers.");
-    
+
     const container = document.getElementById('nameFields');
     container.innerHTML = '';
-    for(let i=1; i<=count; i++) {
+    for (let i = 1; i <= count; i++) {
         container.innerHTML += `<input type="text" class="name-in" placeholder="Traveler ${i} Name">`;
     }
 }
@@ -30,13 +30,13 @@ function startDashboard() {
 
     for (let i = 0; i < inputs.length; i++) {
         let currentInput = inputs[i];
-        
+
         let name = currentInput.value.trim();
-        
+
         if (name === "") {
             name = "Member " + (i + 1);
         }
-        
+
         participants.push(name);
     }
 
@@ -63,19 +63,19 @@ function addExpense() {
     const desc = document.getElementById('descInput').value;
     const amount = parseFloat(document.getElementById('amountInput').value);
 
-    if(!desc || isNaN(amount) || amount <= 0) return alert("Please enter valid expense details.");
+    if (!desc || isNaN(amount) || amount <= 0) return alert("Please enter valid expense details.");
 
-    expenses.push({ 
-        id: Date.now(), 
-        name, 
-        desc, 
-        amount, 
-        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
+    expenses.push({
+        id: Date.now(),
+        name,
+        desc,
+        amount,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     });
 
     document.getElementById('descInput').value = '';
     document.getElementById('amountInput').value = '';
-    
+
     render();
     saveData();
 }
@@ -84,12 +84,12 @@ function deleteExpense(id) {
     let newList = [];
 
     for (let i = 0; i < expenses.length; i++) {
-        
+
         if (expenses[i].id !== id) {
-            
+
             newList.push(expenses[i]);
         }
-        
+
     }
 
     expenses = newList;
@@ -102,7 +102,7 @@ function render() {
     const log = document.getElementById('expenseLog');
     let total = 0;
     for (let i = 0; i < expenses.length; i++) {
-        total = total + expenses[i].amount; 
+        total = total + expenses[i].amount;
     }
     let avg;
     if (participants.length > 0) {
@@ -114,14 +114,14 @@ function render() {
     document.getElementById('statTotal').innerText = `৳${total.toFixed(2)}`;
     document.getElementById('statAvg').innerText = `৳${avg.toFixed(2)}`;
 
-    
-    let logContent = ""; 
 
-    
+    let logContent = "";
+
+
     for (let i = expenses.length - 1; i >= 0; i--) {
-        let e = expenses[i]; 
-        
-        
+        let e = expenses[i];
+
+
         logContent += `
             <div class="expense-item">
                 <div>
@@ -136,7 +136,7 @@ function render() {
         `;
     }
 
-    
+
     log.innerHTML = logContent;
 
 
@@ -157,55 +157,55 @@ function toggleSettlements() {
 
     const totals = {};
     for (let i = 0; i < participants.length; i++) {
-        totals[participants[i]] = 0; 
+        totals[participants[i]] = 0;
     }
     for (let i = 0; i < expenses.length; i++) {
         const e = expenses[i];
-        totals[e.name] += e.amount; 
+        totals[e.name] += e.amount;
     }
 
-    
+
     let totalSpent = 0;
     for (let person in totals) {
-        totalSpent += totals[person]; 
+        totalSpent += totals[person];
     }
-    const avg = totalSpent / participants.length; 
+    const avg = totalSpent / participants.length;
 
 
     let debtors = [];
     let creditors = [];
     for (let i = 0; i < participants.length; i++) {
         const p = participants[i];
-        const bal = totals[p] - avg; 
+        const bal = totals[p] - avg;
         if (bal < -0.01) {
-            debtors.push({ name: p, bal: bal }); 
+            debtors.push({ name: p, bal: bal });
         } else if (bal > 0.01) {
-            creditors.push({ name: p, bal: bal }); 
+            creditors.push({ name: p, bal: bal });
         }
     }
 
-    
+
     let resultsText = "<strong>Settlement Plan:</strong><br>";
     let d = 0;
     let c = 0;
 
     while (d < debtors.length && c < creditors.length) {
-        
+
         let pay = Math.min(-debtors[d].bal, creditors[c].bal);
-        
-        
+
+
         resultsText += `<b>${debtors[d].name}</b> pays ${pay.toFixed(2)} TK to <b>${creditors[c].name}</b><br>`;
 
-        
+
         debtors[d].bal += pay;
         creditors[c].bal -= pay;
 
-        
+
         if (Math.abs(debtors[d].bal) < 0.01) d++;
         if (Math.abs(creditors[c].bal) < 0.01) c++;
     }
 
-    
+
     if (totalSpent === 0) resultsText += "Everyone is even!";
     section.innerHTML = resultsText;
     section.style.display = 'block';
@@ -213,11 +213,11 @@ function toggleSettlements() {
 
 // Data Persistence
 function saveData() {
-    localStorage.setItem('tour_split_data', JSON.stringify({participants, expenses}));
+    localStorage.setItem('tour_split_data', JSON.stringify({ participants, expenses }));
 }
 
 function resetApp() {
-    if(confirm("Are you sure? This will delete all members and expenses.")) {
+    if (confirm("Are you sure? This will delete all members and expenses.")) {
         localStorage.removeItem('tour_split_data');
         location.reload();
     }
@@ -227,11 +227,11 @@ function resetApp() {
 async function exportPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-    
+
     doc.setFont("helvetica", "bold");
     doc.setFontSize(18);
     doc.text("TourSplit Pro - Financial Report", 14, 20);
-    
+
     const tableData = expenses.map(e => [e.time, e.name, e.desc, `TK ${e.amount.toFixed(2)}`]);
     doc.autoTable({
         startY: 30,
@@ -243,17 +243,17 @@ async function exportPDF() {
     doc.text("Settlements:", 14, finalY);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    
+
     const settlementText = document.getElementById('settlementSection').innerText;
     doc.text(settlementText || "No settlements calculated.", 14, finalY + 10);
-    
+
     doc.save("TourReport.pdf");
 }
 
 // Load on start
 window.onload = () => {
     const saved = localStorage.getItem('tour_split_data');
-    if(saved) {
+    if (saved) {
         const data = JSON.parse(saved);
         participants = data.participants;
         expenses = data.expenses;
