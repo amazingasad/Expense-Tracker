@@ -3,14 +3,18 @@ let expenses = [];
 let destination = "";
 let currentStepId = "step0";
 
+function getCurrency() {
+  return document.getElementById('currencySelect')?.value || "৳";
+}
+
 function toggleTheme() {
     const body = document.body;
     const btn = document.getElementById('themeBtn');
-    if (body.getAttribute('data-theme') === 'dark') {
-        body.removeAttribute('data-theme');
+    if (body.getAttribute('data-theme') === 'dark') { 
+        body.removeAttribute('data-theme'); 
         btn.innerText = '🌙';
     } else {
-        body.setAttribute('data-theme', 'dark');
+        body.setAttribute('data-theme', 'dark'); 
         btn.innerText = '☀️';
     }
 }
@@ -19,22 +23,22 @@ function switchScreen(id) {
     currentStepId = id;
     const screens = document.querySelectorAll('.screen');
     for (let i = 0; i < screens.length; i++) {
-        screens[i].classList.remove('active');
+        screens[i].classList.remove('active'); 
     }
     document.getElementById(id).classList.add('active');
-
     const backBtn = document.getElementById('backBtn');
-    if (id === 'step1' || id === 'step2' || id === 'step_welcome') {
+    if (id === 'step1' || id === 'step2' || id === 'step3') {
         backBtn.style.display = 'block';
     } else {
         backBtn.style.display = 'none';
-    }
+    } 
 }
 
 function goBack() {
     if (currentStepId === 'step_welcome') switchScreen('step0');
     else if (currentStepId === 'step1') switchScreen('step_welcome');
     else if (currentStepId === 'step2') switchScreen('step1');
+    else if (currentStepId === 'step3') switchScreen('step2');
 }
 
 function initNames() {
@@ -70,7 +74,7 @@ function updatePayerDropdown() {
         let opt = document.createElement("option");
         opt.value = participants[i];
         opt.innerText = participants[i];
-        select.appendChild(opt);
+        select.appendChild(opt);//parent er sathe child element(new) jog korbe
     }
 }
 
@@ -158,10 +162,9 @@ function render() {
         catTotals[c] += expenses[i].amount;
     }
 
-    document.getElementById('statTotal').innerText = `৳${total.toFixed(2)}`;
-    document.getElementById('statAvg').innerText = `৳${(participants.length > 0 ? total / participants.length : 0).toFixed(2)}`;
+    document.getElementById('statTotal').innerText = `${getCurrency()}${total.toFixed(2)}`;
+    document.getElementById('statAvg').innerText = `${getCurrency()}${(participants.length > 0 ? total / participants.length : 0).toFixed(2)}`;
 
-    // Update Chart
     const cats = ["Food", "Transport", "Hotel", "Other"];
     for (let i = 0; i < cats.length; i++) {
         let cName = cats[i];
@@ -183,7 +186,7 @@ function render() {
                                 <button class="delete-btn" onclick="deleteExpense(${e.id})">Delete</button>
                             </div>
                         </div>
-                        <div style="font-weight:800; color:var(--primary)">৳${e.amount.toFixed(2)}</div>
+                        <div style="font-weight:800; color:var(--primary)">${getCurrency()}${e.amount.toFixed(2)}</div>
                     </div>`;
     }
     log.innerHTML = html;
@@ -212,7 +215,7 @@ function toggleSettlements() {
     let d = 0, c = 0;
     while (d < debtors.length && c < creditors.length) {
         let pay = Math.min(-debtors[d].bal, creditors[c].bal);
-        text += `<b>${debtors[d].name}</b> pays ${pay.toFixed(2)} TK to <b>${creditors[c].name}</b><br>`;
+        text += `<b>${debtors[d].name}</b> pays ${pay.toFixed(2)} ${getCurrency()} to <b>${creditors[c].name}</b><br>`;
         debtors[d].bal += pay; creditors[c].bal -= pay;
         if (Math.abs(debtors[d].bal) < 0.01) d++;
         if (Math.abs(creditors[c].bal) < 0.01) c++;
@@ -232,29 +235,54 @@ function resetApp() {
 async function exportPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
+    
+    const currentSym = getCurrency();
+    let safeCurrency = currentSym;
+    if (currentSym === "৳") safeCurrency = "BDT";
+    else if (currentSym === "₹") safeCurrency = "INR";
+    else safeCurrency = currentSym;
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(18);
-    doc.text("TourSplit Pro - Financial Report", 14, 20);
+    doc.text(`TourSplit Pro - ${destination}`, 14, 20);
 
-    const tableData = expenses.map(e => [e.time, e.name, e.desc, `TK ${e.amount.toFixed(2)}`]);
+    
+    const tableData = expenses.map(e => [
+        e.time, 
+        e.name, 
+        e.desc, 
+        `${safeCurrency} ${e.amount.toFixed(2)}`
+    ]);
+
     doc.autoTable({
         startY: 30,
         head: [['Time', 'Paid By', 'Description', 'Amount']],
         body: tableData,
+        theme: 'striped',
+        headStyles: { fillColor: [41, 128, 185] }
     });
 
+
     const finalY = doc.lastAutoTable.finalY + 15;
-    doc.text("Settlements:", 14, finalY);
+    doc.setFontSize(14);
+    doc.text("Settlement Summary:", 14, finalY);
+    
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(10);
+    doc.setFontSize(11);
 
-    const settlementText = document.getElementById('settlementSection').innerText;
-    doc.text(settlementText || "No settlements calculated.", 14, finalY + 10);
+    const settlementDiv = document.getElementById('settlementSection');
+    if (settlementDiv.style.display === 'none') toggleSettlements();
+    
 
-    doc.save("TourReport.pdf");
+    let rawText = settlementDiv.innerText;
+    let cleanText = rawText.replace(/৳/g, "BDT").replace(/₹/g, "INR");
+    
+    
+    const splitText = doc.splitTextToSize(cleanText, 180);
+    doc.text(splitText, 14, finalY + 10);
+
+    doc.save(`${destination}_Report.pdf`);
 }
-
 
 window.onload = () => {
     const saved = localStorage.getItem('tour_split_data');

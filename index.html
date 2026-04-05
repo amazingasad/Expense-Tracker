@@ -33,8 +33,14 @@
                 <h4 style="font-size: 13px; margin-bottom: 5px;">🔒 Privacy Concern</h4>
                 <p style="font-size: 12px; margin-bottom: 0;">Your tour data stays on your device. No cloud uploads.</p>
             </div>
+            <select id="currencySelect">
+                <option value="৳">৳ BDT</option>
+                <option value="$">$ USD</option>
+                <option value="₹">₹ INR</option>
+            </select>
             <div style="margin-bottom: 15px;">
-                <label style="font-weight: 600; font-size: 14px; display: block; margin-bottom: 8px;">Trip Destination</label>
+                <label style="font-weight: 600; font-size: 14px; display: block; margin-bottom: 8px;">Trip
+                    Destination</label>
                 <input type="text" id="destInput" placeholder="e.g. Sajek Valley">
             </div>
             <button class="btn-primary" onclick="switchScreen('step1')">Get Started</button>
@@ -64,8 +70,12 @@
             </div>
 
             <div class="stats-row">
-                <div class="stat-box"><small>Total Spent</small><div id="statTotal">৳0</div></div>
-                <div class="stat-box"><small>Avg / Person</small><div id="statAvg">৳0</div></div>
+                <div class="stat-box"><small>Total Spent</small>
+                    <div id="statTotal">৳0</div>
+                </div>
+                <div class="stat-box"><small>Avg / Person</small>
+                    <div id="statAvg">৳0</div>
+                </div>
             </div>
 
             <div class="chart-container">
@@ -76,10 +86,14 @@
                     <div id="barOther" class="bar-segment seg-other" style="width: 0%"></div>
                 </div>
                 <div class="chart-legend">
-                    <div class="legend-item"><span class="dot seg-food"></span> Food (<span id="txtFood">0</span>%)</div>
-                    <div class="legend-item"><span class="dot seg-trans"></span> Transport (<span id="txtTrans">0</span>%)</div>
-                    <div class="legend-item"><span class="dot seg-hotel"></span> Hotel (<span id="txtHotel">0</span>%)</div>
-                    <div class="legend-item"><span class="dot seg-other"></span> Other (<span id="txtOther">0</span>%)</div>
+                    <div class="legend-item"><span class="dot seg-food"></span> Food (<span id="txtFood">0</span>%)
+                    </div>
+                    <div class="legend-item"><span class="dot seg-trans"></span> Transport (<span
+                            id="txtTrans">0</span>%)</div>
+                    <div class="legend-item"><span class="dot seg-hotel"></span> Hotel (<span id="txtHotel">0</span>%)
+                    </div>
+                    <div class="legend-item"><span class="dot seg-other"></span> Other (<span id="txtOther">0</span>%)
+                    </div>
                 </div>
             </div>
 
@@ -95,16 +109,20 @@
                 <input type="number" id="amountInput" placeholder="Amount">
                 <input type="hidden" id="editId" value="">
                 <button class="btn-primary" id="addBtn" onclick="addExpense()">Add Expense</button>
-                <button class="btn-ghost" id="cancelEditBtn" style="display:none; width:100%; margin-top:10px;" onclick="cancelEdit()">Cancel Edit</button>
+                <button class="btn-ghost" id="cancelEditBtn" style="display:none; width:100%; margin-top:10px;"
+                    onclick="cancelEdit()">Cancel Edit</button>
             </div>
 
             <h3 style="font-weight: 800;">History</h3>
             <div id="expenseLog" style="max-height: 320px; overflow-y: auto; margin-top: 10px;"></div>
 
-            <button class="btn-ghost" style="width:100%; margin-top: 20px;" onclick="toggleSettlements()">Calculate Final Split</button>
+            <button class="btn-ghost" style="width:100%; margin-top: 20px;" onclick="toggleSettlements()">Calculate
+                Final Split</button>
             <div id="settlementSection" class="settlement-card" style="display:none;"></div>
 
-            <button style="width:100%; background:none; border:none; color:#ff3b30; margin-top:30px; font-weight:600; text-decoration:underline; cursor:pointer;" onclick="resetApp()">Reset All Data</button>
+            <button
+                style="width:100%; background:none; border:none; color:#ff3b30; margin-top:30px; font-weight:600; text-decoration:underline; cursor:pointer;"
+                onclick="resetApp()">Reset All Data</button>
         </div>
     </div>
 
